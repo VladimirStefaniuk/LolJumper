@@ -23,7 +23,7 @@ public class WorldGenerator : MonoBehaviour {
     private float _nextY;
 
 
-    string InputFileName = "WorldRowPatterns.txt";
+    string InputFileName = "WorldRowPatterns";
     List<int[]> _rows;
 
     void Awake()
@@ -31,28 +31,27 @@ public class WorldGenerator : MonoBehaviour {
         GameEvents.OnCameraRowEnter += CreateRandomRow;
     }
 
-    void Start () {
+    void Start() {
         _poolManager = GameObject.FindObjectOfType<PoolManager>();
         _blocksPool = _poolManager.GetPool(PoolTypesEnum.Block);
         _rowPool = _poolManager.GetPool(PoolTypesEnum.Row);
         _rows = new List<int[]>();
 
         // read file
-        InputFileName = Application.dataPath + "/" + InputFileName;
-        using ( StreamReader reader = File.OpenText(InputFileName) )
-            while (!reader.EndOfStream)
-            {
-                string line = reader.ReadLine();
-                if (null == line)
-                    continue;
-
+        // InputFileName = Application.dataPath + "/" + InputFileName;
+        TextAsset patternFile = Resources.Load(InputFileName) as TextAsset;
+        Debug.Log(patternFile.text);
+        foreach (string line in patternFile.text.Split())
+        {
+            if (null == line || line.Length < 1)
+                    continue; 
                 int[] rowArray = new int[line.Length];
                 for (int i = 0; i < line.Length; i++)
                 {
                     rowArray[i] = int.Parse(line[i].ToString());
                 }
                 _rows.Add(rowArray); 
-            }
+           }
 
         CreateNewLevel();
         GameEvents.OnGameRestart += StartNewGame;
