@@ -14,6 +14,10 @@ public static class GameEvents {
     /// Player fall
     /// </summary>
     public static Action OnPlayerFall;
+    /// <summary>
+    /// Starts game again
+    /// </summary>
+    public static Action OnGameRestart;
 }
 
 

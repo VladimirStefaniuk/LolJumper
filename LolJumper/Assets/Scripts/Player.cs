@@ -27,15 +27,17 @@ public class Player : MonoBehaviour {
 
     [HideInInspector]
     public float Radius;
+    private TrailRenderer _trail;
 
     // Use this for initialization
     void Awake () {
         if (_instance == null)
             _instance = this;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
+        _trail = GetComponent<TrailRenderer>();
+
+        GameEvents.OnPlayerFall += () => _trail.enabled = false;
+        GameEvents.OnGameRestart += () => _trail.enabled = true; 
+    }
+	 
 }

@@ -54,29 +54,31 @@ public class WorldGenerator : MonoBehaviour {
                 _rows.Add(rowArray); 
             }
 
-        _nextY = Camera.main.transform.position.y - Camera.main.orthographicSize + RowInterval;
-        StartPosition = new Vector3(Camera.main.transform.position.x - Camera.main.orthographicSize, 
-            _nextY,
-            0);
-
-        Debug.Log(" StartPosition: " + StartPosition.ToString());
-
-        CreateRow(new int[]{ 1,1,1,1,1,1,1,1,1 });
-
-        for (int i = 0; i < PreloadedRows; i++)
-            CreateRandomRow();
-
-        //Player.Instance.transform.position = new Vector3(StartPosition.x + 4, StartPosition.y + 5f);
+        CreateNewLevel();
+        GameEvents.OnGameRestart += StartNewGame;
     }
 	
-	// Update is called once per frame
-	void Update () { 
-
-	}
+ 
 
     public void StartNewGame()
     {
+        _rowPool.ReturnAll();
         _blocksPool.ReturnAll();
+        CreateNewLevel();
+    }
+
+    void CreateNewLevel()
+    {
+        _nextY = 2 - Camera.main.orthographicSize + RowInterval;
+        StartPosition = new Vector3(Camera.main.transform.position.x - Camera.main.orthographicSize,
+            _nextY,
+            0); 
+
+        CreateRow(new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1 }); // TODO: temp 
+        for (int i = 0; i < PreloadedRows; i++)
+            CreateRandomRow();
+
+        Debug.Log(" StartPosition: " + StartPosition.ToString());
     }
 
     private int prevRandIndex;

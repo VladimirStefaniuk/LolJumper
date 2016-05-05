@@ -27,6 +27,7 @@ public class PlayerInput : MonoBehaviour {
         _circleCollider = GetComponent<CircleCollider2D>();
          
         _isGrounded = true;
+        GameEvents.OnGameRestart += MovePlayerToStart;
     }
 
 	void Start () {
@@ -34,6 +35,14 @@ public class PlayerInput : MonoBehaviour {
         {
             _lenghtTouchRay = _circleCollider.radius * 1.1f;
         }
+        MovePlayerToStart();
+    }
+
+    void MovePlayerToStart()
+    {
+        // TODO: dynamic position
+        _rigidbody.velocity = Vector3.zero;
+        transform.position = new Vector3(0, 2, 0);
     }
 	 
 	void Update () {

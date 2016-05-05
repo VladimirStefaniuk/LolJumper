@@ -16,6 +16,10 @@ public class CameraControler : MonoBehaviour {
     private float deadY;
     public float delayBeforeStart = 1.0f;
 
+    private IEnumerator _cameraAnimation;
+
+ 
+
     void Start()
     {
         TopBoundCollider.transform.position = new Vector3
@@ -28,9 +32,23 @@ public class CameraControler : MonoBehaviour {
             transform.position.y - Camera.main.orthographicSize,
             0);
 
-        StartCoroutine(AnimateCamera());
+        StartCameraAnimation(); 
+        GameEvents.OnGameRestart += StartCameraAnimation;
     }
-     
+
+
+    void StartCameraAnimation()
+    {
+        transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+        if (_cameraAnimation != null)
+        {
+            StopCoroutine(_cameraAnimation);
+            _cameraAnimation = null;
+        }
+
+        _cameraAnimation = AnimateCamera();
+        StartCoroutine(_cameraAnimation);
+    }
 
     IEnumerator AnimateCamera()
     {
@@ -38,7 +56,7 @@ public class CameraControler : MonoBehaviour {
 
         while (true)
         {
-            currentMoveSpeed = Mathf.Clamp(Mathf.Log10(Time.timeSinceLevelLoad), minMoveSpeed, maxMoveSpeed);
+            currentMoveSpeed = Mathf.Clamp(Mathf.Log10(GameState.timeLevelRuning) * 2, minMoveSpeed, maxMoveSpeed);
             var CameraMovingVector = Vector3.up * currentMoveSpeed * Time.deltaTime;
             transform.Translate(CameraMovingVector);
             deadY = transform.position.y - Camera.main.orthographicSize;

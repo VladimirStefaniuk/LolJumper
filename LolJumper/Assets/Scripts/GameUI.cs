@@ -4,9 +4,10 @@ using System.Collections;
 
 public class GameUI : MonoBehaviour {
 
-    public Text ScoreLabel;
+    public Text ScoreLabel; 
     public GameObject LoseScreen;
-    private int currentScore = 0;
+    private int currentScore;
+    private float levelPlayedTime;
     private bool isGameActive;
  
     void Awake()
@@ -17,15 +18,15 @@ public class GameUI : MonoBehaviour {
     void Start()
     {
         currentScore = 0;
+        levelPlayedTime = 0;
         isGameActive = true;
         LoseScreen.SetActive(false);
     }
 	 
 	void Update () {
         if (isGameActive)
-        {
-            currentScore = (int) Time.timeSinceLevelLoad;
-            ScoreLabel.text = "Score: " + currentScore.ToString();
+        { 
+            ScoreLabel.text = "Score: " + ((int)GameState.timeLevelRuning).ToString();
         }
     }
 
@@ -37,9 +38,8 @@ public class GameUI : MonoBehaviour {
 
     public void PlayAgain()
     {
-        // Just reload current scene
-        // only temporary solution 
-        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+        GameEvents.OnGameRestart(); 
+        Start();
     }
 
     public void ExitGame()
